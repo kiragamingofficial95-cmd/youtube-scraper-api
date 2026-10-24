@@ -103,7 +103,7 @@ curl "http://localhost:8080/youtube/v3/playlists?id=PLrAXtmErZgOeiKm4sgNOknGvNjb
 curl "http://localhost:8080/youtube/v3/playlistItems?playlistId=PLrAXtmErZgOeiKm4sgNOknGvNjby9efdf&part=snippet,contentDetails&maxResults=10"
 ```
 
-## Running
+## Running locally
 
 ```bash
 cd youtube-scraper-api
@@ -112,6 +112,45 @@ npm start
 ```
 
 Server listens on `PORT` (default 8080).
+
+## Hosted on Vercel
+
+A public production deployment is available:
+
+- **Base URL:** `https://youtube-scraper-api-olive.vercel.app/youtube/v3`
+- **GitHub:** https://github.com/kiragamingofficial95-cmd/youtube-scraper-api
+
+Example:
+
+```bash
+curl "https://youtube-scraper-api-olive.vercel.app/youtube/v3/search?q=nodejs&maxResults=3&part=snippet"
+```
+
+### Deploy your own to Vercel
+
+1. Fork/clone the repo.
+2. Install the Vercel CLI: `npm i -g vercel`
+3. From the project directory run `vercel --prod`.
+4. (Optional) Disable Deployment Protection (SSO) so the API is public:
+   `vercel project protection disable --sso`
+5. The `api/index.js` serverless function re-exports the Express app; `vercel.json` routes all paths to it and sets `maxDuration: 60`.
+
+### Vercel configuration (`vercel.json`)
+
+```json
+{
+  "version": 2,
+  "routes": [{ "src": "/(.*)", "dest": "/api/index" }],
+  "functions": { "api/index.js": { "maxDuration": 60 } }
+}
+```
+
+### Notes for serverless
+
+- The Express app is exported from `src/app.js` and re-exported by `api/index.js`.
+- `src/server.js` is used only for local development (`npm start`).
+- Continuation tokens (`pageToken`) are stored in memory per instance; on Vercel they may not survive across cold starts or different instances. For stateless pagination, pass the returned `nextPageToken` back promptly.
+- Scraping can be slow; the function timeout is set to 60s. Heavy enrichment (`enrich=true`) may exceed it.
 
 ## Limitations
 
