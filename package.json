@@ -1,0 +1,16 @@
+{
+  "name": "youtube-scraper-api",
+  "version": "1.0.0",
+  "description": "A scraper-backed drop-in replacement for the YouTube Data API v3 (GET + POST parity).",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "youtubei.js": "^18.3.0"
+  }
+}
